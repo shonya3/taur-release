@@ -30,10 +30,9 @@ jobs:
             - name: install frontend dependencies
               run: npm install # change this to npm or pnpm depending on which one you use
             - name: generate release notes
-              run: npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0
-              env:
-                  RELEASE_BODY: ${{ file("CHANGELOG.md") }}
-            - uses: tauri-apps/tauri-action@v0
+              run: |
+                  npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+                  export RELEASE_BODY=$(cat CHANGELOG.md)
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
