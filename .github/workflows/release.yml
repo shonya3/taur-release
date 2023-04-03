@@ -31,6 +31,8 @@ jobs:
               run: npm install # change this to npm or pnpm depending on which one you use
             - name: generate release notes
               run: npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+              env:
+                  RELEASE_BODY: ${{ file("CHANGELOG.md") }}
             - uses: tauri-apps/tauri-action@v0
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,10 +41,6 @@ jobs:
               with:
                   tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
                   releaseName: 'App v__VERSION__'
-                  releaseBody: |
-                      conventional-changelog -p angular -i CHANGELOG.md -s
-                      sed -i '1i ## Changelog\n' CHANGELOG.md
-                      sed -i '2i See the assets to download this version and install.\n' CHANGELOG.md
-                      cat CHANGELOG.md
+                  releaseBody: ${{ env.RELEASE_BODY }}
                   releaseDraft: true
                   prerelease: false
